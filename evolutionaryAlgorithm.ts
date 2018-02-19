@@ -1,3 +1,21 @@
-const str : string = 'Hello World!';
+const target: string = 'Hello, World!';
+const str: string = 'jjKnp4bqpmAbp';
 
-console.log(str);
+console.log(
+    calculateFitness(str,target)
+);
+
+// jjKnp4bqpmAbp = 15491;
+
+
+
+function calculateFitness(trait: string, target: string){
+    const targetArray: string[] = target.split('');
+    const traitArray: string[] = trait.split('');
+    let fitnessScore: number = 0;
+    targetArray.map((char, index) => {
+        const diff: number = char.charCodeAt(0) - traitArray[index].charCodeAt(0);
+        fitnessScore = fitnessScore + (diff * diff);
+    })
+    return fitnessScore;
+}
