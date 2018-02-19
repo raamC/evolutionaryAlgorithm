@@ -1,9 +1,9 @@
 const target: string = 'Hello, World!';
 const str: string = 'jjKnp4bqpmAbp';
 
-console.log(
-    calculateFitness(str,target)
-);
+// console.log(
+//     calculateFitness(str,target)
+// );
 
 // jjKnp4bqpmAbp = 15491;
 
@@ -18,4 +18,10 @@ function calculateFitness(trait: string, target: string){
         fitnessScore = fitnessScore + (diff * diff);
     })
     return fitnessScore;
+}
+
+if (calculateFitness('jjKnp4bqpmAbp', 'Hello, World!') === 15491){
+    console.log('Test for calculateFitness function passed');
+} else {
+    console.log('Test for calculateFitness function failed');
 }
