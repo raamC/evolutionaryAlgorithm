@@ -40,22 +40,32 @@ function calculateFitness(trait: string, target: string){
     return fitnessScore;
 }
 
+function sortPopulationByFitness(population: Individual[]) {
+    population.sort(function(a,b) {
+        return a.fitnessScore - b.fitnessScore;
+    })
+}
+
+function selectIndividuals(sortedPopulation: Individual[], number: number) {
+    return sortedPopulation.slice(0, number)
+}
+
 
 const target: string = 'Hello, World!';
-
-
 
 const population = createInitialPopulation(target, 5);
 population.map(indiv => console.log(indiv));
 
+console.log(`\n`)
+sortPopulationByFitness(population);
+population.map(indiv => console.log(indiv));
+
+console.log(`\n`)
+sortPopulationByFitness(population);
+selectIndividuals(population,3).map(indiv => console.log(indiv));
 
 
 
-
-// const trait = generateTrait(target);
-
-// console.log(trait);
-// console.log(calculateFitness(trait, target))
 
 
 // Tests
@@ -66,9 +76,9 @@ population.map(indiv => console.log(indiv));
 //     console.log('Test for calculateFitness function failed');
 // }
 
-if (createInitialPopulation('target', 5).length === 5) {
-    console.log('Test for creating initial population function passed');
-}else {
-    console.log('Test for creating initial population failed');
-}
+// if (createInitialPopulation('target', 5).length === 5) {
+//     console.log('Test for creating initial population function passed');
+// }else {
+//     console.log('Test for creating initial population function failed');
+// }
 
