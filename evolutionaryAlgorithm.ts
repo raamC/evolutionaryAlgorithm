@@ -1,5 +1,33 @@
-const target: string = 'Hello, World!';
-const str: string = 'jjKnp4bqpmAbp';
+interface Individual{
+    trait: string;
+    fitnessScore: number;
+}
+
+function createInitialPopulation(target: string, poolSize: number) {
+    const population: Individual[] = [];
+    let n: number = 0;
+    while(n < poolSize) {
+        const trait = generateTrait(target);
+        population.push({
+            trait,
+            fitnessScore: calculateFitness(trait, target),
+        })
+        n++;
+    }
+    return population;
+}
+
+function generateTrait(target:string) {
+    let s: string = '';
+    while(s.length < target.length){
+        s = s.concat(String.fromCharCode(getRndInteger(32,126)));
+    }
+    return s;
+}
+
+function getRndInteger(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
 
 function calculateFitness(trait: string, target: string){
     const targetArray: string[] = target.split('');
@@ -12,35 +40,22 @@ function calculateFitness(trait: string, target: string){
     return fitnessScore;
 }
 
-interface Individual{
-    trait: string;
-    fitnessScore: number;
-}
 
-interface Population{
-    individuals: Individual[];
-}
-
-// console.log(Math.floor(Math.random() * 10) + 33);
-
-function getRndInteger(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1) ) + min;
-}
+const target: string = 'Hello, World!';
 
 
 
-function generateTrait(target:string) {
-    let s: string = '';
-    while(s.length < target.length){
-        s = s.concat(String.fromCharCode(getRndInteger(32,126)));
-    }
-    return s;
-}
+const population = createInitialPopulation(target, 5);
+population.map(indiv => console.log(indiv));
 
-const trait = generateTrait(target);
 
-console.log(trait);
-console.log(calculateFitness(trait, target))
+
+
+
+// const trait = generateTrait(target);
+
+// console.log(trait);
+// console.log(calculateFitness(trait, target))
 
 
 // Tests
@@ -50,4 +65,10 @@ console.log(calculateFitness(trait, target))
 // } else {
 //     console.log('Test for calculateFitness function failed');
 // }
+
+if (createInitialPopulation('target', 5).length === 5) {
+    console.log('Test for creating initial population function passed');
+}else {
+    console.log('Test for creating initial population failed');
+}
 
