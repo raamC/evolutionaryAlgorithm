@@ -67,6 +67,28 @@ function recombineParents(parents: Individual[], target: string) {
     }
 }
 
+function mutateIndividual(individual: Individual, mutationChance: number, target: string) {
+    const traitArray: string[] = individual.trait.split('');
+    let mutatedTrait: string = '';
+    traitArray.map(char => {
+        if(getRndInteger(0,100) < mutationChance) {
+            const upOrDownDecider = getRndInteger(0,1);
+            if(upOrDownDecider === 0) {
+                mutatedTrait = mutatedTrait.concat(String.fromCharCode(char.charCodeAt(0) + 1));
+                // TODO make sure this doesn't go out of bounds in terms of ASCII characters
+            } else {
+                mutatedTrait = mutatedTrait.concat(String.fromCharCode(char.charCodeAt(0) - 1));
+            }
+        } else {
+            mutatedTrait = mutatedTrait.concat(char);
+        }
+    })
+    return {
+        trait: mutatedTrait,
+        fitnessScore: calculateFitness(mutatedTrait, target),
+    }
+}
+
 
 
 
@@ -76,7 +98,7 @@ const population = createInitialPopulation(target, 5);
 population.map(indiv => console.log(indiv));
 
 console.log(`\n`)
-sortPopulationByFitness(population);
+sortPopulationByFitness(population); 
 population.map(indiv => console.log(indiv));
 
 console.log(`\n`)
@@ -84,27 +106,34 @@ sortPopulationByFitness(population);
 const parents = selectIndividuals(population,2);
 parents.map(indiv => console.log(indiv));
 
+
+console.log(`\n`)
 const offspring = recombineParents(parents, target);
 console.log(offspring);
+
+console.log(`\n`)
+const mutation = mutateIndividual(offspring, 30, target)
+console.log(mutation);
+
 
 
 
 // Tests
 
-if (calculateFitness('jjKnp4bqpmAbp', 'Hello, World!') === 15491){
-    console.log('Test for calculateFitness function passed');
-} else {
-    console.log('Test for calculateFitness function failed');
-}
+// if (calculateFitness('jjKnp4bqpmAbp', 'Hello, World!') === 15491){
+//     console.log('Test for calculateFitness function passed');
+// } else {
+//     console.log('Test for calculateFitness function failed');
+// }
 
-if (createInitialPopulation('target', 5).length === 5) {
-    console.log('Test for creating initial population function passed');
-}else {
-    console.log('Test for creating initial population function failed');
-}
+// if (createInitialPopulation('target', 5).length === 5) {
+//     console.log('Test for creating initial population function passed');
+// }else {
+//     console.log('Test for creating initial population function failed');
+// }
 
-if (selectIndividuals(createInitialPopulation('target', 5), 3).length === 3) {
-    console.log('Test for selecting individuals passed');
-}else {
-    console.log('Test for selecting individuals failed');
-}
+// if (selectIndividuals(createInitialPopulation('target', 5), 3).length === 3) {
+//     console.log('Test for selecting individuals passed');
+// }else {
+//     console.log('Test for selecting individuals failed');
+// }
