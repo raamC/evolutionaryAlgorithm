@@ -20,13 +20,13 @@ function createInitialPopulation(target: string, poolSize: number) {
 function generateTrait(target:string) {
     let s: string = '';
     while(s.length < target.length){
-        s = s.concat(String.fromCharCode(getRndInteger(32,90)));
+        s = s.concat(String.fromCharCode(getRandomInteger(32,90)));
         //TODO handle escape characters and extend to 32-126 without thing like \
     }
     return s;
 }
 
-function getRndInteger(min: number, max: number) {
+function getRandomInteger(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
@@ -47,7 +47,7 @@ function sortPopulationByFitness(population: Individual[]) {
     })
 }
 
-function selectIndividuals(sortedPopulation: Individual[], number: number) {
+function selectParents(sortedPopulation: Individual[], number: number) {
     return sortedPopulation.slice(0, number)
 }
 
@@ -59,7 +59,7 @@ function recombineParents(parents: Individual[], target: string) {
     })
     let offspringTrait: string = '';
     for(let i = 0; i < parents[0].trait.length; i++) {
-        offspringTrait = offspringTrait.concat(traitLibrary[getRndInteger(0,numberOfParents-1)][i]);
+        offspringTrait = offspringTrait.concat(traitLibrary[getRandomInteger(0,numberOfParents-1)][i]);
     }
     return {
         trait: offspringTrait,
@@ -71,8 +71,8 @@ function mutateIndividual(individual: Individual, mutationChance: number, target
     const traitArray: string[] = individual.trait.split('');
     let mutatedTrait: string = '';
     traitArray.map(char => {
-        if(getRndInteger(0,100) < mutationChance) {
-            const upOrDownDecider = getRndInteger(0,1);
+        if(getRandomInteger(0,100) < mutationChance) {
+            const upOrDownDecider = getRandomInteger(0,1);
             if(upOrDownDecider === 0) {
                 mutatedTrait = mutatedTrait.concat(String.fromCharCode(char.charCodeAt(0) + 1));
                 // TODO make sure this doesn't go out of bounds in terms of ASCII characters
@@ -103,7 +103,7 @@ population.map(indiv => console.log(indiv));
 
 console.log(`\n`)
 sortPopulationByFitness(population);
-const parents = selectIndividuals(population,2);
+const parents = selectParents(population,2);
 parents.map(indiv => console.log(indiv));
 
 
