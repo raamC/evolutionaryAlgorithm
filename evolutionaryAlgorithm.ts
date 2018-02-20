@@ -1,14 +1,6 @@
 const target: string = 'Hello, World!';
 const str: string = 'jjKnp4bqpmAbp';
 
-// console.log(
-//     calculateFitness(str,target)
-// );
-
-// jjKnp4bqpmAbp = 15491;
-
-
-
 function calculateFitness(trait: string, target: string){
     const targetArray: string[] = target.split('');
     const traitArray: string[] = trait.split('');
@@ -20,8 +12,42 @@ function calculateFitness(trait: string, target: string){
     return fitnessScore;
 }
 
-if (calculateFitness('jjKnp4bqpmAbp', 'Hello, World!') === 15491){
-    console.log('Test for calculateFitness function passed');
-} else {
-    console.log('Test for calculateFitness function failed');
+interface Individual{
+    trait: string;
+    fitnessScore: number;
 }
+
+interface Population{
+    individuals: Individual[];
+}
+
+// console.log(Math.floor(Math.random() * 10) + 33);
+
+function getRndInteger(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
+
+
+function generateTrait(target:string) {
+    let s: string = '';
+    while(s.length < target.length){
+        s = s.concat(String.fromCharCode(getRndInteger(32,126)));
+    }
+    return s;
+}
+
+const trait = generateTrait(target);
+
+console.log(trait);
+console.log(calculateFitness(trait, target))
+
+
+// Tests
+
+// if (calculateFitness('jjKnp4bqpmAbp', 'Hello, World!') === 15491){
+//     console.log('Test for calculateFitness function passed');
+// } else {
+//     console.log('Test for calculateFitness function failed');
+// }
+
