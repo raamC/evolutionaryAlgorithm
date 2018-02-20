@@ -20,7 +20,8 @@ function createInitialPopulation(target: string, poolSize: number) {
 function generateTrait(target:string) {
     let s: string = '';
     while(s.length < target.length){
-        s = s.concat(String.fromCharCode(getRndInteger(32,126)));
+        s = s.concat(String.fromCharCode(getRndInteger(32,90)));
+        //TODO handle escape characters and extend to 32-126 without thing like \
     }
     return s;
 }
@@ -50,6 +51,24 @@ function selectIndividuals(sortedPopulation: Individual[], number: number) {
     return sortedPopulation.slice(0, number)
 }
 
+function recombineParents(parents: Individual[], target: string) {
+    const numberOfParents: number = parents.length;
+    const traitLibrary: string[][] = [];
+    parents.map(parent => {
+        traitLibrary.push(parent.trait.split(''))
+    })
+    let offspringTrait: string = '';
+    for(let i = 0; i < parents[0].trait.length; i++) {
+        offspringTrait = offspringTrait.concat(traitLibrary[getRndInteger(0,numberOfParents-1)][i]);
+    }
+    return {
+        trait: offspringTrait,
+        fitnessScore: calculateFitness(offspringTrait, target),
+    }
+}
+
+
+
 
 const target: string = 'Hello, World!';
 
@@ -62,23 +81,30 @@ population.map(indiv => console.log(indiv));
 
 console.log(`\n`)
 sortPopulationByFitness(population);
-selectIndividuals(population,3).map(indiv => console.log(indiv));
+const parents = selectIndividuals(population,2);
+parents.map(indiv => console.log(indiv));
 
-
+const offspring = recombineParents(parents, target);
+console.log(offspring);
 
 
 
 // Tests
 
-// if (calculateFitness('jjKnp4bqpmAbp', 'Hello, World!') === 15491){
-//     console.log('Test for calculateFitness function passed');
-// } else {
-//     console.log('Test for calculateFitness function failed');
-// }
+if (calculateFitness('jjKnp4bqpmAbp', 'Hello, World!') === 15491){
+    console.log('Test for calculateFitness function passed');
+} else {
+    console.log('Test for calculateFitness function failed');
+}
 
-// if (createInitialPopulation('target', 5).length === 5) {
-//     console.log('Test for creating initial population function passed');
-// }else {
-//     console.log('Test for creating initial population function failed');
-// }
+if (createInitialPopulation('target', 5).length === 5) {
+    console.log('Test for creating initial population function passed');
+}else {
+    console.log('Test for creating initial population function failed');
+}
 
+if (selectIndividuals(createInitialPopulation('target', 5), 3).length === 3) {
+    console.log('Test for selecting individuals passed');
+}else {
+    console.log('Test for selecting individuals failed');
+}
