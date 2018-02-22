@@ -61,10 +61,12 @@ function recombineParents(parents: Individual[], target: string) {
     for (let i = 0; i < parents[0].trait.length; i++) {
         offspringTrait = offspringTrait.concat(traitLibrary[getRandomInteger(0, numberOfParents - 1)][i]);
     }
-    return {
+
+    const offspring: Individual = {
         trait: offspringTrait,
         fitnessScore: calculateFitness(offspringTrait, target),
     }
+    return offspring;
 }
 
 function mutateIndividual(individual: Individual, mutationChance: number, target: string) {
@@ -100,6 +102,7 @@ function getPopulationStats(population: Individual[]) {
         max: values[values.length-1],
         median: median(values),
         mean: mean(values),
+        length: values.length,
     }
 }
 
@@ -115,17 +118,47 @@ function median(values) {
     if (values.length % 2)
         return values[half];
     else
-        return (values[half - 1] + values[half]) / 2.0;
+        return Math.round((values[half - 1] + values[half]) / 2);
 }
 
+
+// Create initial population
+
 const target: string = 'Hello, world!';
-
-const population = createInitialPopulation(target, 50);
+let generation = 0;
+let population = createInitialPopulation(target, 30);
 // population.map(indiv => console.log(indiv));
+console.log(`Initial Population`);
+sortPopulationByFitness(population);
+console.log(population[0].trait);
+console.log(getPopulationStats(population));
+console.log(`\n`);
 
-const stats = getPopulationStats(population);
 
-console.log(stats);
+while(getPopulationStats(population).min > 0 && generation<1000) {
+    generation++;
+    sortPopulationByFitness(population); 
+    const parents = selectParents(population, 10);
+    const offspringArray: Individual[] = [];
+    for (let i = 0; i < parents.length; i += 2) {
+        const offspring = mutateIndividual(
+            recombineParents([parents[i],parents[i+1]], target), 5, target
+        );
+        offspringArray.push(offspring);
+    }
+    population = population.slice(0, (population.length - offspringArray.length)).concat(offspringArray);
+    // console.log(getPopulationStats(population));
+}
+
+// population.map(indiv => console.log(indiv));
+console.log(`\n`);
+console.log(`Final Population`);
+sortPopulationByFitness(population);
+console.log(population[0].trait);
+console.log(getPopulationStats(population));
+console.log(generation);
+
+
 
 //create initial population
 // while (min>0 or generationNumber>limit)
