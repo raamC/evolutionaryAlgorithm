@@ -89,26 +89,19 @@ function mutateIndividual(individual: Individual, mutationChance: number, target
     }
 }
 
-
-
-
-const target: string = 'Hello';
-
-const population = createInitialPopulation(target, 5);
-population.map(indiv => console.log(indiv));
-
 function getPopulationStats(population: Individual[]) {
     const values = population.map(individual => {
         return individual.fitnessScore;
     })
     values.sort(function(a, b) {return a - b});
-    console.log(`Min: ${values[0]}`);
-    console.log(`Max: ${values[values.length-1]}`);
-    console.log(`Median: ${median(values)}`);
-    console.log(`Mean: ${mean(values)}`);
+    
+    return {
+        min: values[0],
+        max: values[values.length-1],
+        median: median(values),
+        mean: mean(values),
+    }
 }
-
-getPopulationStats(population);
 
 function mean(values) {
     return Math.round(values.reduce((s, c) => s + c, 0) / values.length);
@@ -124,6 +117,20 @@ function median(values) {
     else
         return (values[half - 1] + values[half]) / 2.0;
 }
+
+const target: string = 'Hello, world!';
+
+const population = createInitialPopulation(target, 50);
+// population.map(indiv => console.log(indiv));
+
+const stats = getPopulationStats(population);
+
+console.log(stats);
+
+//create initial population
+// while (min>0 or generationNumber>limit)
+// grab a 
+
 
 // console.log(`\n`)
 // sortPopulationByFitness(population); 
