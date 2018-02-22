@@ -3,6 +3,15 @@ interface Individual {
     fitnessScore: number;
 }
 
+interface Result {
+    generation: number;
+    min: number;
+    max: number;
+    median: number;
+    mean: number;
+    topIndividual: string;
+}
+
 function createInitialPopulation(target: string, poolSize: number) {
     const population: Individual[] = [];
     let n: number = 0;
@@ -21,7 +30,7 @@ function generateTrait(target: string) {
     let s: string = '';
     while (s.length < target.length) {
         s = s.concat(String.fromCharCode(getRandomInteger(32, 90)));
-        //TODO handle escape characters and extend to 32-126 without thing like \
+        //TODO handle escape characters and extend to 32-126 without things like \
     }
     return s;
 }
@@ -92,17 +101,18 @@ function mutateIndividual(individual: Individual, mutationChance: number, target
 }
 
 function getPopulationStats(population: Individual[]) {
+    sortPopulationByFitness(population);
+    
     const values = population.map(individual => {
         return individual.fitnessScore;
     })
-    values.sort(function(a, b) {return a - b});
     
     return {
+        topIndividual: population[0].trait,
         min: values[0],
         max: values[values.length-1],
         median: median(values),
         mean: mean(values),
-        length: values.length,
     }
 }
 
@@ -121,18 +131,26 @@ function median(values) {
         return Math.round((values[half - 1] + values[half]) / 2);
 }
 
+function createRecord(generation: number, population: Individual[]) {
+    return Object.assign({}, {generation: generation}, getPopulationStats(population));
+}
+
 
 // Create initial population
 
-const target: string = 'Hello, world!';
+const target: string = 'HELLO, WORLD!';
 let generation = 0;
 let population = createInitialPopulation(target, 30);
+const results: Result[] = [];
+
 // population.map(indiv => console.log(indiv));
 console.log(`Initial Population`);
-sortPopulationByFitness(population);
-console.log(population[0].trait);
 console.log(getPopulationStats(population));
 console.log(`\n`);
+results.push(createRecord(generation, population));
+
+
+
 
 
 while(getPopulationStats(population).min > 0 && generation<1000) {
@@ -147,17 +165,19 @@ while(getPopulationStats(population).min > 0 && generation<1000) {
         offspringArray.push(offspring);
     }
     population = population.slice(0, (population.length - offspringArray.length)).concat(offspringArray);
-    // console.log(getPopulationStats(population));
+    results.push(createRecord(generation, population));
+    if(generation%25 === 0) { 
+        // console.log(getPopulationStats(population));
+    }
 }
 
 // population.map(indiv => console.log(indiv));
 console.log(`\n`);
 console.log(`Final Population`);
-sortPopulationByFitness(population);
-console.log(population[0].trait);
 console.log(getPopulationStats(population));
 console.log(generation);
 
+console.log(results[0]);
 
 
 //create initial population
